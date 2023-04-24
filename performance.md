@@ -1,16 +1,5 @@
 # Тестирование времени отклика и пропускной способности
 
-<style>
-
-    details summary {
-        font-size: 20px;
-    }
-
-    details[open] summary {
-        border-bottom: 1px solid gray;
-    }
-</style>
-
 <details>
 <summary>1 поток, 1 соединение</summary>
 
