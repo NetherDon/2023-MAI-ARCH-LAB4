@@ -1,0 +1,124 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'API Сервиса товаров'
+servers:
+  - url: http://localhost:8081
+    description: Сервис товаров
+paths:
+  /catalog:
+    get:
+      summary: Получение списка товаров
+      responses:
+        '200':
+          description: Пользователи, соответствующие маске
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products'
+        500:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /catalog/add:
+    post:
+      summary: Добавление нового пользователя
+      parameters:
+      - name: name
+        description: Название товара
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: type
+        description: Тип товара
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: manufactorer
+        description: Производитель товара
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: description
+        description: Описание товара 
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: price
+        description: Цена товара
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Идентификатор добавленного товара
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Ошибка добавления товара
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    product_id:
+      description: Уникальный идентификатор товара
+      type: integer
+    products:
+      type: array
+      items:
+        $ref: '#/components/schemas/product'
+    product:
+      type: object
+      required:
+        - id
+        - name
+        - type
+        - manufactorer
+        - description
+        - price
+      properties:
+        id:
+          $ref: '#/components/schemas/product_id'
+        name:
+          type: string
+        type:
+          type: string
+        manufactorer:
+          type: string
+        description:
+          type: string
+        price:
+          type: integer
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: Сообщение о ошибке
+          type: string
+  securitySchemes:
+      basicAuth:     
+        type: http
+        scheme: basic
+
+security:
+  - basicAuth: []

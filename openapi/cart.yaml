@@ -1,0 +1,106 @@
+openapi: '3.0.0'
+info:
+  version: '1.0.0'
+  title: 'API Сервиса корзин'
+servers:
+  - url: http://localhost:8082
+    description: Сервис корзин
+paths:
+  /cart:
+    get:
+      summary: Получение списка товаров в корзине
+      responses:
+        '200':
+          description: Товары из корзины авторизованного пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products'
+        401:
+          description: Позователь не авторизован
+          content:
+            application/json:
+              schema:
+                type: string
+        500:
+          description: Неизвестная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cart/put:
+    post:
+      summary: Добавление товара в корзину
+      parameters:
+      - name: product_id
+        description: Идентификатор товара
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Идентификатор корзины
+          content:
+            application/json:
+              schema:
+                type: integer
+        401:
+          description: Позователь не авторизован
+          content:
+            application/json:
+              schema:
+                type: string
+        404:
+          description: Ошибка добавления товара в корзину
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    products:
+      type: array
+      items:
+        $ref: '#/components/schemas/product'
+    product:
+      type: object
+      required:
+        - name
+        - type
+        - manufactorer
+        - description
+        - price
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        manufactorer:
+          type: string
+        description:
+          type: string
+        price:
+          type: integer
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: Сообщение о ошибке
+          type: string
+  securitySchemes:
+      basicAuth:     
+        type: http
+        scheme: basic
+
+security:
+  - basicAuth: []

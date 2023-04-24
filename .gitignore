@@ -1,0 +1,7 @@
+*.sh
+poco/
+redis-cpp/
+wek/
+build/
+.vscode/
+commands.sql
